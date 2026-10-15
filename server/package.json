@@ -15,9 +15,11 @@
     "@google/generative-ai": "^0.24.1",
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.6",
+    "csv-parse": "^7.0.3",
     "dotenv": "^17.3.1",
-    "express": "^5.2.1",
+    "express": "^5.3.0",
     "jsonwebtoken": "^9.0.3",
+    "multer": "^2.4.0",
     "pg": "^8.20.0",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.37.8"

@@ -11,6 +11,7 @@ const workoutLogRoutes = require('./routes/workoutLogs');
 const personalRecordRoutes = require('./routes/personalRecords');
 const coachingRoutes = require('./routes/coaching');
 const growthRoutes = require('./routes/growth');
+const nutritionRoutes = require('./routes/nutrition');
 
 const sequelize = require('./db');
 
@@ -38,6 +39,7 @@ app.use('/api/workout-logs', workoutLogRoutes);
 app.use('/api/personal-records', personalRecordRoutes);
 app.use('/api/coaching', coachingRoutes);
 app.use('/api/growth', growthRoutes);
+app.use('/api/nutrition', nutritionRoutes);
 
 
 // Health Check
