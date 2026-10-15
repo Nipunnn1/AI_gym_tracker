@@ -31,8 +31,6 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # env files (can opt-in for committing if needed)
-.env
-.env.local
 .env.development.local
 .env.test.local
 .env.production.local
@@ -59,8 +57,6 @@ venv/
 venv312/
 
 # Environment variables and secrets
-.env
-.env.*
 !.env.example
 
 # Build files
@@ -68,7 +64,7 @@ dist/
 build/
 
 # Editor files
-.vscode/
 .DS_Store
 Thumbs.db
 
+config.bat

@@ -1,223 +1,396 @@
-<p align="center">
-  <img src="./image.png" alt="GymAI — AI Gym Trainer" width="800" />
-</p>
+# 🏋️ AI Gym Tracker – Real-Time Exercise Tracking & Nutrition Assistant
 
-<h1 align="center">🏋️ GymAI — AI Gym Trainer</h1>
+An AI-powered fitness application that combines real-time exercise tracking with food detection and nutritional information lookup. The project aims to help users monitor their workouts and make more informed nutritional decisions through computer vision and machine learning.
 
-<p align="center">
-  <strong>Real-time AI form correction and biomechanics tracking for home workouts.</strong><br />
-  Watch your webcam, get a rep counter, live form feedback, and a full gamified training dashboard — all running in the browser.
-</p>
+## 🚀 Overview
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Next.js-16-black" />
-  <img src="https://img.shields.io/badge/React-19-blue" />
-  <img src="https://img.shields.io/badge/MediaPipe-BlazePose-10b981" />
-  <img src="https://img.shields.io/badge/Express-5-green" />
-  <img src="https://img.shields.io/badge/PostgreSQL-16-blue" />
-</p>
+The AI Gym Tracker integrates exercise tracking and nutrition assistance into a single application.
 
----
+The exercise tracking component uses computer vision to monitor workout movements and track exercise repetitions. The nutrition component uses a YOLO object detection model to identify food items from images and retrieves corresponding nutritional information from a structured food dataset.
 
-## 🧠 What is this?
-
-GymAI is a **full-stack AI personal trainer** that uses your webcam to analyze your exercise form in real time. It's like having a coach watch every rep you do — it counts reps automatically, detects bad form (swinging, leaning, partial reps, knee cave, sagging hips, and more), and gives instant corrections with a live skeleton overlay.
-
-The entire computer-vision pipeline runs **locally in your browser** using Google's MediaPipe BlazePose — no video ever leaves your machine. A Node.js/Express + PostgreSQL backend stores your workout sessions and powers a gamified analytics dashboard (XP, levels, streaks, achievements, ghost challenges, leaderboards, and AI-generated workout plans).
+By combining these features, the application provides a unified platform for workout monitoring and food analysis.
 
 ## ✨ Features
 
-### Real-Time Pose Engine
-- **33-point full-body landmark tracking** via MediaPipe BlazePose (model complexity 1, smooth landmarks enabled)
-- Live **skeleton overlay** + per-joint angle readouts drawn directly on the video canvas
-- **Automatic rep counting** via a threshold state machine (`down` ↔ `up`) with noise-tolerant hysteresis
-- **Form correction engine** — per-exercise rules that fire warnings and errors, e.g.:
-  - Bicep curl: "Stop swinging! Pin elbows!", "Curl higher!"
-  - Squat: "Knees out! Don't cave in!", "Chest up! Don't lean forward!"
-  - Push-up: "Don't sag hips! Tighten core!", "Go chest to floor!"
-- **Visibility guard** — prompts you to step back if the full body isn't in frame
-- **Progress gauge** drawn around the active joint showing range-of-motion completion
-- **Combo/momentum system** with hype messages every 3 and 5 reps
+### 💪 1. Real-Time Exercise Tracking
+- Tracks workout movements using computer vision.
+- Supports exercise monitoring and repetition counting.
+- Provides visual feedback through the dashboard.
+- Helps users monitor their workout sessions.
 
-### Supported Exercises (12)
-| Upper Body | Lower Body | Core | Full Body |
-|---|---|---|---|
-| Bicep Curl | Squat | Crunch | Push-Up |
-| Overhead Press | Lunge | Leg Raise | Jumping Jack |
-| Lateral Raise | Calf Raise | | High Knees |
-| Tricep Extension | | | |
+### 🍎 2. AI-Based Food Detection
+- Uses a trained YOLO object detection model to identify food items in images.
+- Generates predicted food labels and confidence scores.
+- Processes food images through the nutrition detection backend.
+- Returns detected food items for nutritional analysis.
 
-### Biomechanics Engine (`src/lib/biomechanics.ts`)
-- 2D and 3D joint-angle calculation (`atan2`-based and vector-dot-product based)
-- Torso lean detection, vertical alignment, symmetry ratio (left/right)
-- Body orientation detection (front / side / back)
-- Velocity tracking to catch jerky, uncontrolled movement
-- Joint visibility validation helpers
+### 🥗 3. Nutritional Information Lookup
+- Uses a structured food nutrition dataset.
+- Matches detected food names against available dataset entries.
+- Retrieves nutritional information for matching food items.
+- Provides available calorie, protein, carbohydrate, and fat values.
+- Indicates when nutritional information cannot be found for a detected food.
 
-### Gamified Growth Dashboard
-- **XP + leveling system**, momentum score, current/longest streaks
-- **Daily quests** (Rep Blitz, Show Up Time, Elite Form) and achievement track
-- **AI Readiness Score** — tells you whether to push hard or recover, computed from recent training load
-- **Ghost Challenge** — a personalized "beat your past self" target
-- **Smart Workout Plan** generated from goal + history
-- **Leaderboard**, weekly momentum bars, and full session history table
+### 🖥️ 4. Integrated Dashboard
+- Combines exercise tracking and nutrition assistance in one interface.
+- Displays food detection results.
+- Presents available nutritional information.
+- Provides a centralized interface for fitness-related activities.
 
-### Backend & Data
-- Express REST API with modular routes: sessions, workout logs, personal records, coaching, growth
-- PostgreSQL (Sequelize ORM), auto-synced schema
-- AI-powered coaching and plan generation via Google Gemini
+## 🛠️ Technology Stack
 
-## 🏗️ How it's built
-
-### Architecture
-```
-┌─────────────────────────────────────────────────────────────┐
-│                        BROWSER (Next.js)                    │
-│                                                             │
-│  Webcam ──► MediaPipe BlazePose (CDN) ──► Landmarks         │
-│                │                                            │
-│                ▼                                            │
-│  Biomechanics Engine ─► angle calc, lean, symmetry          │
-│                │                                            │
-│                ▼                                            │
-│  Rep Counter State Machine ─► reps, progress, form errors   │
-│                │                                            │
-│                ▼                                            │
-│  Canvas overlay + UI (feedback, hype, gauges)               │
-│                │                                            │
-│                ▼  POST /api/sessions  (fetch)               │
-├───────────────────────────┼─────────────────────────────────┤
-│                    EXPRESS API (port 5000)                  │
-│  /api/sessions  /api/workout-logs  /api/personal-records    │
-│  /api/coaching  /api/growth                                 │
-│                │                                            │
-│                ▼                                            │
-│              PostgreSQL (Sequelize)                         │
-└─────────────────────────────────────────────────────────────┘
-```
-
-### Tech Stack
-| Layer | Technology |
+| Technology | Purpose |
 |---|---|
-| Frontend | Next.js 16 (App Router, Turbopack), React 19, TypeScript, Tailwind CSS 4 |
-| Vision | MediaPipe Pose (BlazePose) + MediaPipe Drawing Utils via CDN |
-| Backend | Node.js, Express 5, Sequelize ORM |
-| Database | PostgreSQL |
-| AI | Google Gemini (`@google/generative-ai`) for coaching/plans |
-| Auth/Data | Supabase JS (configured, `@supabase/ssr` present) |
-| Testing | Jest + ts-jest (frontend), Jest + Supertest (backend) |
+| Python | Computer vision and food detection |
+| YOLO | Food object detection |
+| OpenCV | Image processing and computer vision |
+| JavaScript / TypeScript | Application and frontend logic |
+| React / Next.js | Dashboard interface |
+| Node.js | Backend runtime |
+| Express.js | Backend API routing |
+| CSV | Structured nutritional information storage |
+| Git and GitHub | Version control and project hosting |
 
-### Key Design Decisions
-1. **Privacy-first**: pose estimation runs entirely client-side; raw video never touches the network.
-2. **Dynamic imports**: MediaPipe modules are imported dynamically at runtime to work around Turbopack build constraints.
-3. **Generic rep engine**: one state machine (`updateExercise` in `repCounter.ts`) handles every exercise via declarative config (thresholds, required joints, form rules) — adding a new exercise is pure configuration.
-4. **Config-driven exercises**: each exercise declares its angle function, form rules, difficulty, muscle groups, and coaching tips.
-5. **Gamification as retention**: the obsession engine (`obsessionEngine.ts`) converts raw sessions into XP, streaks, and quests; the growth API layers readiness, ghost targets, and smart plans on top.
+*Note: The exact libraries and versions depend on the project's installed dependencies.*
 
-## 🚀 Getting Started
+## 🧠 System Architecture
+
+The application follows a modular architecture in which the frontend communicates with the backend, and the backend coordinates food detection and nutrition lookup.
+
+```text
+                   ┌─────────────────────────┐
+                   │       User              │
+                   └────────────┬────────────┘
+                                │
+                                ▼
+                   ┌─────────────────────────┐
+                   │   Frontend Dashboard    │
+                   │   React / Next.js       │
+                   └────────────┬────────────┘
+                                │
+                                ▼
+                   ┌─────────────────────────┐
+                   │      Node.js Server     │
+                   │      Express API        │
+                   └────────────┬────────────┘
+                                │
+                                ▼
+                   ┌─────────────────────────┐
+                   │   Food Detection API    │
+                   │   Python + YOLO         │
+                   └────────────┬────────────┘
+                                │
+                                ▼
+                   ┌─────────────────────────┐
+                   │    Detected Food Items  │
+                   │  Labels + Confidence    │
+                   └────────────┬────────────┘
+                                │
+                                ▼
+                   ┌─────────────────────────┐
+                   │   Nutrition Lookup      │
+                   │   CSV Dataset           │
+                   └────────────┬────────────┘
+                                │
+                                ▼
+                   ┌─────────────────────────┐
+                   │  Nutritional Results    │
+                   │ Calories, Protein,      │
+                   │ Carbohydrates and Fats  │
+                   └────────────┬────────────┘
+                                │
+                                ▼
+                   ┌─────────────────────────┐
+                   │   Dashboard Results     │
+                   └─────────────────────────┘
+```
+
+The exercise tracking component operates as part of the broader fitness application.
+
+## 📂 Project Structure
+
+The following is the expected structure of the main files relevant to the project. Your complete repository may contain additional files.
+
+```text
+AI_gym_tracker/
+│
+├── nutrition/
+│   ├── best.pt
+│   ├── yolo.py
+│   ├── test_food.jpg
+│   └── data/
+│       └── Indian_Food_Nutrition_Processed.csv
+│
+├── server/
+│   ├── routes/
+│   │   └── nutrition.js
+│   ├── services/
+│   │   └── nutritionLookup.js
+│   ├── testNutritionLookup.js
+│   ├── package.json
+│   ├── package-lock.json
+│   └── server.js
+│
+├── src/
+│   └── components/
+│       └── Dashboard.tsx
+│
+├── .gitignore
+└── README.md
+```
+
+### Important Files
+
+| File | Description |
+|---|---|
+| `nutrition/best.pt` | Trained YOLO model weights used for food detection |
+| `nutrition/yolo.py` | Python script that performs food detection |
+| `nutrition/data/Indian_Food_Nutrition_Processed.csv` | Dataset containing food names and nutritional values |
+| `server/routes/nutrition.js` | Backend route for nutrition-related requests |
+| `server/services/nutritionLookup.js` | Service for retrieving nutritional information |
+| `server/testNutritionLookup.js` | Script for testing nutrition lookup |
+| `server/server.js` | Backend server entry point |
+| `src/components/Dashboard.tsx` | Dashboard component |
+
+## ⚙️ Installation and Setup
 
 ### Prerequisites
-- Node.js 20+
-- PostgreSQL running locally (or a remote `DATABASE_URL`)
 
-### 1. Frontend
+Install the following before running the project:
+
+- Node.js and npm
+- Python
+- Git
+- Visual Studio Code or another code editor
+
+The Python environment must also have the dependencies required by the YOLO model and computer vision scripts.
+
+### 1. Clone the Repository
+
 ```bash
-npm install
-npm run dev
+git clone https://github.com/Nipunnn1/AI_gym_tracker.git
 ```
-Open [http://localhost:3000](http://localhost:3000). Allow camera access — you'll need to be in a well-lit room with your full body in frame.
 
-### 2. Backend
+Navigate to the project directory:
+
+```bash
+cd AI_gym_tracker
+```
+
+### 2. Install Backend Dependencies
+
+Navigate to the server directory:
+
 ```bash
 cd server
+```
+
+Install the Node.js dependencies:
+
+```bash
 npm install
-npm run dev   # or: npm start
-```
-The API runs on port 5000 and auto-creates its tables via `sequelize.sync()`.
-
-### 3. Environment Variables
-
-**Root `.env`** (frontend):
-```env
-NEXT_PUBLIC_API_URL=http://localhost:5000
-NEXT_PUBLIC_SUPABASE_URL=<your-supabase-url>
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=<your-supabase-key>
 ```
 
-**`server/.env`** (backend):
-```env
-PORT=5000
-GEMINI_API_KEY=<your-google-gemini-key>   # required for /api/coaching and smart plans
-DATABASE_URL=                              # leave empty to use individual PG_* vars
-PG_HOST=localhost
-PG_PORT=5432
-PG_DATABASE=postgres
-PG_USER=postgres
-PG_PASSWORD=<your-postgres-password>
-PGSSLMODE=disable                          # set to 'require' for managed DBs (e.g. Supabase)
+Return to the project root:
+
+```bash
+cd ..
 ```
 
-> ⚠️ Never commit real keys. The repo's `.gitignore` excludes `.env` files.
+### 3. Set Up the Python Environment
+
+Create a virtual environment from the project root:
+
+```bash
+python -m venv venv
+```
+
+Activate it on Windows:
+
+```powershell
+.\venv\Scripts\Activate.ps1
+```
+
+If you use Command Prompt instead of PowerShell:
+
+```cmd
+venv\Scripts\activate.bat
+```
+
+Install the Python dependencies required by the project:
+
+```bash
+pip install ultralytics opencv-python
+```
+
+Install any other dependencies required by your existing exercise tracking and nutrition scripts.
+
+### 4. Configure Environment Variables
+
+If the application requires API keys or environment variables, configure them according to your local setup.
+
+Do not commit passwords, API keys, tokens, or other secrets to GitHub.
+
+### 5. Start the Backend
+
+From the `server` directory, run:
+
+```bash
+node server.js
+```
+
+The backend should start if the required dependencies and configuration are present.
+
+Use the port configured in your `server.js` file.
+
+### 6. Start the Frontend
+
+Open a separate terminal in the project directory containing the frontend `package.json`.
+
+Install the frontend dependencies if necessary:
+
+```bash
+npm install
+```
+
+Start the development server using the script defined in that package's `package.json`. For a standard Next.js development setup, this is commonly:
+
+```bash
+npm run dev
+```
+
+Open the local address printed in the terminal.
+
+**Important:** If your repository uses separate frontend and backend directories, run the frontend and backend commands from their respective directories.
+
+## 🍽️ Nutrition Detection Workflow
+
+The nutrition component follows these steps:
+
+1. The user provides a food image through the application.
+2. The backend sends the image to the Python detection script.
+3. The YOLO model predicts the food items present in the image.
+4. The detection script returns food labels and confidence scores.
+5. The backend looks up each detected food name in the nutrition dataset.
+6. Matching records provide the available calorie and macronutrient values.
+7. The backend returns the enriched detection results to the frontend.
+8. The dashboard displays the detected food and its available nutritional information.
+
+### Nutritional Values
+
+The lookup service supports the following fields:
+
+| Nutrient | Description |
+|---|---|
+| Calories | Energy value in kilocalories |
+| Protein | Protein content in grams |
+| Carbohydrates | Carbohydrate content in grams |
+| Fats | Fat content in grams |
+
+The unit basis of the dataset should be checked before interpreting these values as per-serving or per-100-gram quantities.
+
+**Important limitation:** Food detection identifies visual categories, not exact food weight or portion size. Nutritional estimates depend on the dataset match and the accuracy of the food identification.
 
 ## 🧪 Testing
 
+### Test the Nutrition Lookup Service
+
+Navigate to the backend directory:
+
 ```bash
-npm test                  # frontend (jest + ts-jest)
-cd server && npm test     # backend (jest + supertest)
+cd server
 ```
 
-## 📡 API Overview
+Run:
 
-| Method | Endpoint | Description |
-|---|---|---|
-| POST | `/api/sessions` | Save a completed workout session |
-| GET | `/api/sessions` | List sessions (filter by `?userId=`) |
-| GET | `/api/sessions/achievements` | Achievement progress |
-| GET | `/api/sessions/trends` | Weekly rep trends |
-| — | `/api/workout-logs` | Structured workout logging |
-| — | `/api/personal-records` | PR tracking |
-| — | `/api/coaching` | AI coaching (Gemini) |
-| GET | `/api/growth/daily-mission` | Daily mission with adaptive goals |
-| GET | `/api/growth/readiness` | AI readiness score |
-| GET | `/api/growth/ghost-target` | Beat-your-past-self challenge |
-| GET | `/api/growth/comeback-plan` | Re-engagement plan for inactive users |
-| GET | `/api/growth/leaderboard` | Reps/quality leaderboard |
-| GET | `/api/growth/smart-plan?goal=` | AI-generated workout plan |
-| GET | `/api/growth/monetization-signals` | Pro-offer conversion signals |
-| GET | `/health` | Backend health check |
-
-## 📁 Project Structure
-
-```
-├── src/
-│   ├── app/                 # Next.js App Router (layout, home page)
-│   ├── components/
-│   │   ├── WebCamFeed.tsx   # Camera, pose pipeline, canvas overlay, rep logic
-│   │   └── Dashboard.tsx    # Gamified analytics dashboard
-│   └── lib/
-│       ├── biomechanics.ts      # Angle/lean/symmetry/orientation math
-│       ├── repCounter.ts        # Exercise registry + rep state machine
-│       ├── obsessionEngine.ts   # XP, streaks, quests, levels
-│       ├── workoutPrograms.ts   # Pre-built workout plans + session state machine
-│       └── workoutTimer.ts      # Timer helpers
-├── server/
-│   ├── server.js            # Express entry point
-│   ├── db/                  # Sequelize setup
-│   ├── models/              # DB models
-│   ├── routes/              # sessions, workoutLogs, personalRecords, coaching, growth
-│   └── package.json
-└── image.png                # Project banner
+```bash
+node testNutritionLookup.js
 ```
 
-## 🔮 Roadmap Ideas
-- User accounts (Supabase auth integration already configured)
-- More exercises & program templates
-- Per-set form scoring and personal records UI
-- Mobile responsiveness pass for the training zone
-- Workout program mode that chains exercises with rest timers
+This tests the nutrition lookup functionality using the configured dataset.
+
+### Test Food Detection
+
+Use the included food image or another supported image to test the detection script.
+
+From the project root, run:
+
+```bash
+python nutrition/yolo.py
+```
+
+The script may require an image path or other arguments, depending on its current implementation. Supply the input as expected by the script.
+
+Check that the output contains the predicted food labels and confidence scores.
+
+### Test the Integrated Application
+
+Verify the following:
+
+- The frontend loads successfully.
+- The backend starts without errors.
+- Food images can be submitted for detection.
+- The detection script returns results.
+- Matching food names retrieve nutritional information.
+- Unknown food names are handled gracefully.
+- The dashboard displays the returned results.
+- Exercise tracking continues to work as expected.
+
+## 🔬 Machine Learning Approach
+
+The nutrition component uses a YOLO object detection model.
+
+The model produces predicted food categories and confidence scores for input images. The backend then uses the predicted food names to query the nutritional dataset.
+
+The nutrition lookup does not itself predict nutrients using machine learning. It retrieves existing values from the dataset.
+
+The exercise tracking component uses computer vision to support workout monitoring.
+
+## ⚠️ Limitations
+
+- Food detection performance depends on the trained model and input image quality.
+- Visually similar foods may be misclassified.
+- Nutrition values are only available when a suitable dataset entry is found.
+- Exact calories consumed cannot be determined reliably from an image without appropriate portion-size estimation.
+- Nutritional values depend on the accuracy and measurement basis of the source dataset.
+- Exercise tracking performance depends on camera placement, visibility, and movement detection.
+- Model performance metrics should be measured using an appropriately labelled test dataset.
+
+## 🔮 Future Enhancements
+
+Potential improvements include:
+
+- Expanding the food dataset with additional cuisines and food categories.
+- Improving food-name matching between YOLO predictions and dataset entries.
+- Adding portion-size estimation.
+- Supporting meal history and daily nutrition summaries.
+- Adding user profiles and personalized fitness goals.
+- Improving exercise tracking across a wider range of workouts.
+- Evaluating the food detection model with precision, recall, F1-score, and mAP.
+- Measuring inference time and exercise repetition-counting error.
+- Adding workout and nutrition history visualizations.
+
+These are potential enhancements and are not necessarily implemented in the current version.
+
+## 🔒 Privacy and Security
+
+- Keep API keys and credentials outside the public repository.
+- Exclude virtual environments, generated build files, and unnecessary dependencies from version control.
+- Review uploaded images and datasets before publishing.
+- Check model and dataset licensing before redistributing them.
+
+## 👨‍💻 Author
+
+**Nipun Kamineni**
+
+GitHub: [@Nipunnn1](https://github.com/Nipunnn1)
+
+Project Repository: [AI_gym_tracker](https://github.com/Nipunnn1/AI_gym_tracker)
+
+## 📄 License
+
+A license has not been specified here. Add a `LICENSE` file before presenting the project as open source, and ensure that the selected license is compatible with the licenses of the model and dataset.
 
 ---
 
-<p align="center">
-  <sub>Built with Next.js, MediaPipe, Express, and a whole lot of reps. Stay consistent. 💪</sub>
-</p>
+⭐ If you find this project interesting, consider starring the repository!
