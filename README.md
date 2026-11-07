@@ -1,396 +1,269 @@
 # 🏋️ AI Gym Tracker – Real-Time Exercise Tracking & Nutrition Assistant
 
-An AI-powered fitness application that combines real-time exercise tracking with food detection and nutritional information lookup. The project aims to help users monitor their workouts and make more informed nutritional decisions through computer vision and machine learning.
+An AI-powered fitness app that counts reps and checks exercise form from a webcam in real time, and identifies food from a photo to return its nutritional values. It is deployed in production on Vercel with a managed Postgres database on Supabase and continuous deployment from GitHub.
 
-## 🚀 Overview
-
-The AI Gym Tracker integrates exercise tracking and nutrition assistance into a single application.
-
-The exercise tracking component uses computer vision to monitor workout movements and track exercise repetitions. The nutrition component uses a YOLO object detection model to identify food items from images and retrieves corresponding nutritional information from a structured food dataset.
-
-By combining these features, the application provides a unified platform for workout monitoring and food analysis.
-
-## ✨ Features
-
-### 💪 1. Real-Time Exercise Tracking
-- Tracks workout movements using computer vision.
-- Supports exercise monitoring and repetition counting.
-- Provides visual feedback through the dashboard.
-- Helps users monitor their workout sessions.
-
-### 🍎 2. AI-Based Food Detection
-- Uses a trained YOLO object detection model to identify food items in images.
-- Generates predicted food labels and confidence scores.
-- Processes food images through the nutrition detection backend.
-- Returns detected food items for nutritional analysis.
-
-### 🥗 3. Nutritional Information Lookup
-- Uses a structured food nutrition dataset.
-- Matches detected food names against available dataset entries.
-- Retrieves nutritional information for matching food items.
-- Provides available calorie, protein, carbohydrate, and fat values.
-- Indicates when nutritional information cannot be found for a detected food.
-
-### 🖥️ 4. Integrated Dashboard
-- Combines exercise tracking and nutrition assistance in one interface.
-- Displays food detection results.
-- Presents available nutritional information.
-- Provides a centralized interface for fitness-related activities.
-
-## 🛠️ Technology Stack
-
-| Technology | Purpose |
-|---|---|
-| Python | Computer vision and food detection |
-| YOLO | Food object detection |
-| OpenCV | Image processing and computer vision |
-| JavaScript / TypeScript | Application and frontend logic |
-| React / Next.js | Dashboard interface |
-| Node.js | Backend runtime |
-| Express.js | Backend API routing |
-| CSV | Structured nutritional information storage |
-| Git and GitHub | Version control and project hosting |
-
-*Note: The exact libraries and versions depend on the project's installed dependencies.*
-
-## 🧠 System Architecture
-
-The application follows a modular architecture in which the frontend communicates with the backend, and the backend coordinates food detection and nutrition lookup.
-
-```text
-                   ┌─────────────────────────┐
-                   │       User              │
-                   └────────────┬────────────┘
-                                │
-                                ▼
-                   ┌─────────────────────────┐
-                   │   Frontend Dashboard    │
-                   │   React / Next.js       │
-                   └────────────┬────────────┘
-                                │
-                                ▼
-                   ┌─────────────────────────┐
-                   │      Node.js Server     │
-                   │      Express API        │
-                   └────────────┬────────────┘
-                                │
-                                ▼
-                   ┌─────────────────────────┐
-                   │   Food Detection API    │
-                   │   Python + YOLO         │
-                   └────────────┬────────────┘
-                                │
-                                ▼
-                   ┌─────────────────────────┐
-                   │    Detected Food Items  │
-                   │  Labels + Confidence    │
-                   └────────────┬────────────┘
-                                │
-                                ▼
-                   ┌─────────────────────────┐
-                   │   Nutrition Lookup      │
-                   │   CSV Dataset           │
-                   └────────────┬────────────┘
-                                │
-                                ▼
-                   ┌─────────────────────────┐
-                   │  Nutritional Results    │
-                   │ Calories, Protein,      │
-                   │ Carbohydrates and Fats  │
-                   └────────────┬────────────┘
-                                │
-                                ▼
-                   ┌─────────────────────────┐
-                   │   Dashboard Results     │
-                   └─────────────────────────┘
-```
-
-The exercise tracking component operates as part of the broader fitness application.
-
-## 📂 Project Structure
-
-The following is the expected structure of the main files relevant to the project. Your complete repository may contain additional files.
-
-```text
-AI_gym_tracker/
-│
-├── nutrition/
-│   ├── best.pt
-│   ├── yolo.py
-│   ├── test_food.jpg
-│   └── data/
-│       └── Indian_Food_Nutrition_Processed.csv
-│
-├── server/
-│   ├── routes/
-│   │   └── nutrition.js
-│   ├── services/
-│   │   └── nutritionLookup.js
-│   ├── testNutritionLookup.js
-│   ├── package.json
-│   ├── package-lock.json
-│   └── server.js
-│
-├── src/
-│   └── components/
-│       └── Dashboard.tsx
-│
-├── .gitignore
-└── README.md
-```
-
-### Important Files
-
-| File | Description |
-|---|---|
-| `nutrition/best.pt` | Trained YOLO model weights used for food detection |
-| `nutrition/yolo.py` | Python script that performs food detection |
-| `nutrition/data/Indian_Food_Nutrition_Processed.csv` | Dataset containing food names and nutritional values |
-| `server/routes/nutrition.js` | Backend route for nutrition-related requests |
-| `server/services/nutritionLookup.js` | Service for retrieving nutritional information |
-| `server/testNutritionLookup.js` | Script for testing nutrition lookup |
-| `server/server.js` | Backend server entry point |
-| `src/components/Dashboard.tsx` | Dashboard component |
-
-## ⚙️ Installation and Setup
-
-### Prerequisites
-
-Install the following before running the project:
-
-- Node.js and npm
-- Python
-- Git
-- Visual Studio Code or another code editor
-
-The Python environment must also have the dependencies required by the YOLO model and computer vision scripts.
-
-### 1. Clone the Repository
-
-```bash
-git clone https://github.com/Nipunnn1/AI_gym_tracker.git
-```
-
-Navigate to the project directory:
-
-```bash
-cd AI_gym_tracker
-```
-
-### 2. Install Backend Dependencies
-
-Navigate to the server directory:
-
-```bash
-cd server
-```
-
-Install the Node.js dependencies:
-
-```bash
-npm install
-```
-
-Return to the project root:
-
-```bash
-cd ..
-```
-
-### 3. Set Up the Python Environment
-
-Create a virtual environment from the project root:
-
-```bash
-python -m venv venv
-```
-
-Activate it on Windows:
-
-```powershell
-.\venv\Scripts\Activate.ps1
-```
-
-If you use Command Prompt instead of PowerShell:
-
-```cmd
-venv\Scripts\activate.bat
-```
-
-Install the Python dependencies required by the project:
-
-```bash
-pip install ultralytics opencv-python
-```
-
-Install any other dependencies required by your existing exercise tracking and nutrition scripts.
-
-### 4. Configure Environment Variables
-
-If the application requires API keys or environment variables, configure them according to your local setup.
-
-Do not commit passwords, API keys, tokens, or other secrets to GitHub.
-
-### 5. Start the Backend
-
-From the `server` directory, run:
-
-```bash
-node server.js
-```
-
-The backend should start if the required dependencies and configuration are present.
-
-Use the port configured in your `server.js` file.
-
-### 6. Start the Frontend
-
-Open a separate terminal in the project directory containing the frontend `package.json`.
-
-Install the frontend dependencies if necessary:
-
-```bash
-npm install
-```
-
-Start the development server using the script defined in that package's `package.json`. For a standard Next.js development setup, this is commonly:
-
-```bash
-npm run dev
-```
-
-Open the local address printed in the terminal.
-
-**Important:** If your repository uses separate frontend and backend directories, run the frontend and backend commands from their respective directories.
-
-## 🍽️ Nutrition Detection Workflow
-
-The nutrition component follows these steps:
-
-1. The user provides a food image through the application.
-2. The backend sends the image to the Python detection script.
-3. The YOLO model predicts the food items present in the image.
-4. The detection script returns food labels and confidence scores.
-5. The backend looks up each detected food name in the nutrition dataset.
-6. Matching records provide the available calorie and macronutrient values.
-7. The backend returns the enriched detection results to the frontend.
-8. The dashboard displays the detected food and its available nutritional information.
-
-### Nutritional Values
-
-The lookup service supports the following fields:
-
-| Nutrient | Description |
-|---|---|
-| Calories | Energy value in kilocalories |
-| Protein | Protein content in grams |
-| Carbohydrates | Carbohydrate content in grams |
-| Fats | Fat content in grams |
-
-The unit basis of the dataset should be checked before interpreting these values as per-serving or per-100-gram quantities.
-
-**Important limitation:** Food detection identifies visual categories, not exact food weight or portion size. Nutritional estimates depend on the dataset match and the accuracy of the food identification.
-
-## 🧪 Testing
-
-### Test the Nutrition Lookup Service
-
-Navigate to the backend directory:
-
-```bash
-cd server
-```
-
-Run:
-
-```bash
-node testNutritionLookup.js
-```
-
-This tests the nutrition lookup functionality using the configured dataset.
-
-### Test Food Detection
-
-Use the included food image or another supported image to test the detection script.
-
-From the project root, run:
-
-```bash
-python nutrition/yolo.py
-```
-
-The script may require an image path or other arguments, depending on its current implementation. Supply the input as expected by the script.
-
-Check that the output contains the predicted food labels and confidence scores.
-
-### Test the Integrated Application
-
-Verify the following:
-
-- The frontend loads successfully.
-- The backend starts without errors.
-- Food images can be submitted for detection.
-- The detection script returns results.
-- Matching food names retrieve nutritional information.
-- Unknown food names are handled gracefully.
-- The dashboard displays the returned results.
-- Exercise tracking continues to work as expected.
-
-## 🔬 Machine Learning Approach
-
-The nutrition component uses a YOLO object detection model.
-
-The model produces predicted food categories and confidence scores for input images. The backend then uses the predicted food names to query the nutritional dataset.
-
-The nutrition lookup does not itself predict nutrients using machine learning. It retrieves existing values from the dataset.
-
-The exercise tracking component uses computer vision to support workout monitoring.
-
-## ⚠️ Limitations
-
-- Food detection performance depends on the trained model and input image quality.
-- Visually similar foods may be misclassified.
-- Nutrition values are only available when a suitable dataset entry is found.
-- Exact calories consumed cannot be determined reliably from an image without appropriate portion-size estimation.
-- Nutritional values depend on the accuracy and measurement basis of the source dataset.
-- Exercise tracking performance depends on camera placement, visibility, and movement detection.
-- Model performance metrics should be measured using an appropriately labelled test dataset.
-
-## 🔮 Future Enhancements
-
-Potential improvements include:
-
-- Expanding the food dataset with additional cuisines and food categories.
-- Improving food-name matching between YOLO predictions and dataset entries.
-- Adding portion-size estimation.
-- Supporting meal history and daily nutrition summaries.
-- Adding user profiles and personalized fitness goals.
-- Improving exercise tracking across a wider range of workouts.
-- Evaluating the food detection model with precision, recall, F1-score, and mAP.
-- Measuring inference time and exercise repetition-counting error.
-- Adding workout and nutrition history visualizations.
-
-These are potential enhancements and are not necessarily implemented in the current version.
-
-## 🔒 Privacy and Security
-
-- Keep API keys and credentials outside the public repository.
-- Exclude virtual environments, generated build files, and unnecessary dependencies from version control.
-- Review uploaded images and datasets before publishing.
-- Check model and dataset licensing before redistributing them.
-
-## 👨‍💻 Author
-
-**Nipun Kamineni**
-
-GitHub: [@Nipunnn1](https://github.com/Nipunnn1)
-
-Project Repository: [AI_gym_tracker](https://github.com/Nipunnn1/AI_gym_tracker)
-
-## 📄 License
-
-A license has not been specified here. Add a `LICENSE` file before presenting the project as open source, and ensure that the selected license is compatible with the licenses of the model and dataset.
+**Live app:** https://ai-gym-trainer-gamma.vercel.app
+**Live API:** https://ai-gym-trainer-backend.vercel.app/health
 
 ---
 
-⭐ If you find this project interesting, consider starring the repository!
+## ✨ Features
+
+### 💪 Real-Time Exercise Tracking
+- Pose estimation in the browser with **MediaPipe Pose**, so video never leaves the user's device.
+- Rep counting for 12 exercises: squat, push-up, lunge, bicep curl, overhead press, lateral raise, tricep extension, calf raise, crunch, leg raise, high knees and jumping jacks.
+- Form checks computed from joint angles (for example knee cave, hip sag, back arch, partial reps and elbow drift), feeding a per-session quality score.
+- Sessions, personal records, streaks, achievements and trends are stored in Postgres.
+
+### 🍎 AI Food Detection + Nutrition Lookup
+- A custom-trained **YOLO** model detects 12 food classes (Apple, Chapathi, Chicken Gravy, Fries, Idli, Pizza, Rice, Soda, Tomato, Vada, Banana, Burger).
+- The model is exported to **ONNX** and runs inside the Node.js API, so no Python runtime is needed in production.
+- Each detected food is matched against an Indian food nutrition dataset to return calories, protein, carbohydrates and fats.
+
+### 📈 Progress and Motivation
+- Daily missions, comeback plans, readiness scores, "ghost" targets from past performance and a leaderboard.
+- Optional AI coaching advice and program generation (requires a `GEMINI_API_KEY`; not enabled in the live deployment).
+
+---
+
+## 🛠️ Technology Stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS 4 |
+| Computer vision (browser) | MediaPipe Pose, custom biomechanics and rep-counting logic |
+| Backend API | Node.js, Express 5 |
+| Database | PostgreSQL 17 on Supabase, accessed via Sequelize ORM |
+| Food detection | YOLO (Ultralytics) → ONNX, run with `onnxruntime-web` (WebAssembly) and `sharp` for image preprocessing |
+| Hosting | Vercel (frontend and backend as separate projects) |
+| CI/CD | GitHub → Vercel Git integration (preview deploys on branches, production on `main`) |
+| Testing | Jest, Supertest |
+
+---
+
+## 🧠 System Architecture
+
+```text
+ ┌──────────────────────────── Browser ────────────────────────────┐
+ │  Next.js dashboard                                               │
+ │  Webcam → MediaPipe Pose → rep counter + form checks (on-device) │
+ └───────────────┬──────────────────────────────────┬───────────────┘
+                 │ session data (JSON)              │ food photo (multipart)
+                 ▼                                  ▼
+ ┌────────────────────────── Express API (Vercel, sin1) ───────────┐
+ │  /api/sessions, /api/personal-records,      /api/nutrition/detect│
+ │  /api/workout-logs, /api/growth              │                   │
+ │            │                                 ▼                   │
+ │            │                     YOLO (ONNX) via onnxruntime-web │
+ │            │                                 │                   │
+ │            │                                 ▼                   │
+ │            │                     Nutrition lookup (CSV dataset)  │
+ └────────────┼─────────────────────────────────────────────────────┘
+              ▼
+ ┌──────────────────────────────┐
+ │ Supabase Postgres (Singapore)│
+ │ via transaction pooler :6543 │
+ └──────────────────────────────┘
+```
+
+Pose estimation runs on the client to keep latency low and video private. The server handles only persistence and food detection.
+
+---
+
+## 🚀 Deployment and Operations
+
+This project is deployed the way I would deploy for a client: reproducible environments, managed infrastructure, least-privilege access and automated releases.
+
+| Area | Setup |
+|---|---|
+| Frontend | Vercel project `ai-gym-trainer` (Next.js preset) |
+| Backend | Vercel project `ai-gym-trainer-backend` (root directory `server/`; Express app exported as a serverless function) |
+| Region | Backend functions pinned to `sin1` (Singapore) to sit next to the database and cut query latency |
+| Database | Supabase Postgres, connected through the transaction-mode pooler, which suits short-lived serverless connections |
+| Access control | Backend uses a dedicated `ai_gym_app` database role that owns only the app's tables; row-level security is enabled so the public Supabase Data API cannot read them |
+| Secrets | Stored as Vercel environment variables (marked sensitive), never committed |
+| CI/CD | Push to a branch → preview deployment; merge to `main` → production deployment |
+| Releases | New features are verified on a preview URL before being merged to `main` |
+
+### Engineering decisions and trade-offs
+
+| Problem | Constraint | Decision | Trade-off |
+|---|---|---|---|
+| Food detection ran a local Python script with a Windows-only path | Vercel's Node runtime has no Python, and a PyTorch install is far beyond function size limits | Exported YOLO to ONNX and reimplemented letterbox preprocessing and NMS in JavaScript | Roughly 6–10 s per photo on a single CPU core; results match the Python version (same label, confidence within 0.2%) |
+| ONNX export doubled the model to 104 MB | GitHub rejects files over 100 MB | Stored weights in fp16 with cast nodes, restoring fp32 at load time (52 MB) | No accuracy loss, since the original weights were already fp16 |
+| `onnxruntime-node` ships native binaries for every OS (294 MB) | Serverless bundle size limits | Used `onnxruntime-web` (WebAssembly, 14 MB runtime) | Slower than native inference, but portable to any Node host |
+| The server exited if the database was down and wrote uploads to disk | Serverless functions are stateless with a read-only filesystem | Lazy, cached DB connection with a 503 fallback; uploads kept in memory | The first request after a cold start pays the connection cost |
+| Local Postgres with existing user data | Data had to move to a managed database without loss | `pg_dump` → single-transaction load into Supabase, with sequences preserved and row counts verified | One-off migration; future schema changes still go through Sequelize |
+
+### Adapting to a client's stack
+
+The components are decoupled, so each piece can be swapped for whatever a client already runs:
+
+| Component | Current | Swaps cleanly to |
+|---|---|---|
+| Database | Supabase Postgres | Any Postgres (AWS RDS/Aurora, Google Cloud SQL, Azure Database, Neon) by changing `DATABASE_URL` |
+| API hosting | Vercel Functions | AWS Lambda, Google Cloud Run, Azure Functions/App Service or a Docker container (the Express app is exported and also runs with `node server.js`) |
+| Model runtime | `onnxruntime-web` in Node | ONNX Runtime for Python, C#, Java or native Node; TensorRT/OpenVINO for GPU or edge; or in the browser |
+| Frontend | Vercel | Any Node host or static/CDN hosting; the API URL is set by `NEXT_PUBLIC_API_URL` |
+
+---
+
+## 📂 Project Structure
+
+```text
+AI_gym_tracker/
+├── src/                          # Next.js frontend
+│   ├── app/                      # App Router pages and layout
+│   ├── components/
+│   │   ├── Dashboard.tsx         # Main dashboard and nutrition UI
+│   │   └── WebCamFeed.tsx        # Webcam + MediaPipe pose tracking
+│   └── lib/
+│       ├── biomechanics.ts       # Joint angles, alignment, symmetry
+│       ├── repCounter.ts         # Exercise definitions, rep and form logic
+│       ├── workoutPrograms.ts    # Guided workout programs
+│       └── streaks.ts, workoutTimer.ts, obsessionEngine.ts
+│
+├── server/                       # Express API (deployed as its own Vercel project)
+│   ├── server.js                 # App setup; exported for serverless, listens locally
+│   ├── db/index.js               # Sequelize connection (DATABASE_URL or PG_* vars)
+│   ├── models/                   # Session, WorkoutLog, PersonalRecord
+│   ├── routes/                   # sessions, workoutLogs, personalRecords, growth, coaching, nutrition
+│   ├── services/
+│   │   ├── foodDetector.js       # ONNX YOLO inference: letterbox, run, NMS
+│   │   ├── nutritionLookup.js    # CSV nutrition matching
+│   │   └── aiCoach.js            # Optional Gemini coaching
+│   ├── ml/food.onnx              # Exported food detection model
+│   ├── tests/                    # Jest + Supertest
+│   └── vercel.json               # Function region
+│
+├── nutrition/
+│   ├── data/Indian_Food_Nutrition_Processed.csv
+│   ├── best.pt                   # Original YOLO weights (source for ONNX export)
+│   ├── yolo.py                   # Original Python inference script (reference only)
+│   └── test_food.jpg             # Sample image for testing
+│
+└── .vercelignore                 # Keeps model weights and local files out of deploy uploads
+```
+
+---
+
+## ⚙️ Running Locally
+
+### Prerequisites
+- Node.js 20+ and npm
+- PostgreSQL (local) or a connection string to a hosted Postgres database
+
+Python is **not** required. Food detection runs in Node.
+
+### 1. Clone and install
+
+```bash
+git clone https://github.com/Nipunnn1/AI_gym_tracker.git
+cd AI_gym_tracker
+npm install            # frontend
+cd server && npm install && cd ..
+```
+
+### 2. Configure environment variables
+
+`server/.env`:
+
+```env
+PORT=5000
+# Either a full connection string...
+DATABASE_URL=postgresql://user:password@host:6543/postgres
+PGSSLMODE=require
+# ...or local connection parts
+PG_HOST=localhost
+PG_PORT=5432
+PG_DATABASE=postgres
+PG_USER=postgres
+PG_PASSWORD=your_password
+# Optional: AI coaching
+GEMINI_API_KEY=
+```
+
+`.env.local` (frontend, optional; defaults to `http://localhost:5000`):
+
+```env
+NEXT_PUBLIC_API_URL=http://localhost:5000
+```
+
+Tables are created automatically on first start (`sequelize.sync()`).
+
+### 3. Start both apps
+
+```bash
+cd server && npm run dev     # API on http://localhost:5000
+npm run dev                  # in another terminal, from the project root: frontend on http://localhost:3000
+```
+
+---
+
+## 🔌 API Overview
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/health` | Service health |
+| GET / POST | `/api/sessions` | List or save exercise sessions |
+| GET | `/api/sessions/stats`, `/streaks`, `/achievements`, `/trends`, `/history`, `/by-exercise` | Session analytics |
+| GET / POST | `/api/workout-logs` | Guided workout program logs |
+| GET | `/api/personal-records` | Personal records per exercise |
+| GET | `/api/growth/daily-mission`, `/readiness`, `/comeback-plan`, `/leaderboard`, `/smart-plan` | Motivation and planning |
+| POST | `/api/nutrition/detect` | Upload a food photo (`multipart/form-data`, field `image`) and get detections with nutrition |
+| GET | `/api/nutrition/health` | Confirms the model file is present |
+
+Example:
+
+```bash
+curl -F "image=@nutrition/test_food.jpg" https://ai-gym-trainer-backend.vercel.app/api/nutrition/detect
+```
+
+```json
+{
+  "success": true,
+  "detections": [
+    {
+      "food": "Idli",
+      "confidence": 0.9341,
+      "nutrition": { "found": true, "calories": 137.54, "protein": 4.64, "carbohydrates": 28.18, "fats": 0.33 }
+    }
+  ]
+}
+```
+
+---
+
+## 🧪 Testing
+
+```bash
+npm test                          # frontend unit tests (biomechanics)
+cd server && npm test             # API tests (Jest + Supertest)
+node server/testNutritionLookup.js   # nutrition dataset matching
+```
+
+---
+
+## ⚠️ Limitations
+
+- Food detection covers 12 trained classes and identifies the food type, not portion size, so nutrition values are per dataset entry, not per plate.
+- Food inference takes several seconds per photo on serverless CPU.
+- Exercise tracking accuracy depends on lighting, camera angle and full-body visibility.
+- The app is single-user: there is no authentication yet, and sessions are not tied to accounts.
+
+## 🔮 Roadmap
+
+- User accounts with Supabase Auth and per-user row-level security policies.
+- Portion-size estimation and daily nutrition summaries.
+- Model evaluation report (precision, recall, mAP) and more food classes.
+- Faster inference, either by moving detection to the browser (ONNX Runtime Web with WebGPU) or by using a GPU-backed endpoint.
+
+---
+
+## 👨‍💻 Author
+
+**Nipun Kamineni**: [GitHub @Nipunnn1](https://github.com/Nipunnn1)
+
+## 📄 License
+
+No license has been specified yet. Add a `LICENSE` file before presenting the project as open source, and make sure it is compatible with the licenses of the model and dataset.
