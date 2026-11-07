@@ -1,0 +1,9 @@
+nutrition/best.pt
+nutrition/uploads
+nutrition/test_food.jpg
+.idea
+.next
+node_modules
+server/node_modules
+server/.env
+server/tests
