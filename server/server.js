@@ -21,17 +21,31 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Database Connection
-async function connectDatabase() {
+// Database Connection (cached so serverless invocations reuse it)
+let dbReady = null;
+function connectDatabase() {
+    if (!dbReady) {
+        dbReady = sequelize.authenticate()
+            .then(() => sequelize.sync())
+            .then(() => console.log('✅ Postgres Connected'))
+            .catch((err) => {
+                dbReady = null;
+                throw err;
+            });
+    }
+    return dbReady;
+}
+
+// Ensure the database is connected before handling API requests
+app.use('/api', async (req, res, next) => {
     try {
-        await sequelize.authenticate();
-        await sequelize.sync();
-        console.log('✅ Postgres Connected');
+        await connectDatabase();
+        next();
     } catch (err) {
         console.error('❌ Postgres Connection Error:', err);
-        process.exit(1);
+        res.status(503).json({ error: 'Database unavailable' });
     }
-}
+});
 
 // Register Modular Routes
 app.use('/api/sessions', sessionRoutes);
@@ -52,11 +66,19 @@ app.get('/health', (req, res) => {
     });
 });
 
-// Start Server
-const PORT = process.env.PORT || 5000;
-connectDatabase().then(() => {
-    app.listen(PORT, () => {
-        console.log(`🚀 AI Gym Trainer Server running on port ${PORT}`);
-    });
-});
+// Start Server (local only; on Vercel the exported app is used)
+if (require.main === module) {
+    const PORT = process.env.PORT || 5000;
+    connectDatabase()
+        .then(() => {
+            app.listen(PORT, () => {
+                console.log(`🚀 AI Gym Trainer Server running on port ${PORT}`);
+            });
+        })
+        .catch((err) => {
+            console.error('❌ Postgres Connection Error:', err);
+            process.exit(1);
+        });
+}
 
+module.exports = app;
