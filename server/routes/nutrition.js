@@ -18,7 +18,10 @@ const projectRoot = path.resolve(__dirname, '../..');
 
 const nutritionDir = path.join(projectRoot, 'nutrition');
 
-const uploadDir = path.join(nutritionDir, 'uploads');
+// Vercel's filesystem is read-only except for the OS temp dir
+const uploadDir = process.env.VERCEL
+    ? path.join(require('os').tmpdir(), 'uploads')
+    : path.join(nutritionDir, 'uploads');
 
 const pythonScript = path.join(nutritionDir, 'yolo.py');
 
