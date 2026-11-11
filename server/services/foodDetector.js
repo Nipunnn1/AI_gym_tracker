@@ -151,5 +151,6 @@ async function detectFood(imageBuffer) {
 
 module.exports = {
     detectFood,
-    MODEL_PATH
+    MODEL_PATH,
+    CLASS_NAMES
 };

@@ -236,11 +236,16 @@ curl -F "image=@nutrition/test_food.jpg" https://ai-gym-trainer-backend.vercel.a
 
 ## 🧪 Testing
 
+220 tests in three layers: unit, integration (against a throwaway local Postgres 17) and system (the real server process, the real ONNX model and the production Next.js build). No Docker or local Postgres needed.
+
 ```bash
-npm test                          # frontend unit tests (biomechanics)
-cd server && npm test             # API tests (Jest + Supertest)
-node server/testNutritionLookup.js   # nutrition dataset matching
+npm test                          # frontend unit tests (src/lib)
+npm run test:system               # next build + frontend system tests
+cd server && npm test             # backend unit + integration + system
+npm run test:all                  # everything (from the repo root)
 ```
+
+See [TESTING.md](TESTING.md) for why each layer exists, what it covers, and the defects the tests found.
 
 ---
 

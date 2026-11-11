@@ -7,7 +7,12 @@
     "build": "next build",
     "start": "next start",
     "test": "jest",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:unit": "jest",
+    "test:system": "next build && jest --config jest.system.config.js",
+    "test:backend": "npm --prefix server test",
+    "test:all": "npm run test:unit && npm run test:backend && npm run test:system",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@mediapipe/camera_utils": "^0.3.1675466862",
